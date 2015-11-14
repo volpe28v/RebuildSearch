@@ -36,3 +36,12 @@ body {
   left: 50%;
   right: 10px;
 }
+
+.search-form {
+  padding-left: 20px;
+}
+
+.hide {
+  display: none !important;
+}
+

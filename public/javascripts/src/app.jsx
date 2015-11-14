@@ -2,6 +2,9 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 
 var AppBar = require('material-ui/lib/app-bar');
+
+var TextField = require('material-ui/lib/text-field');
+
 var List = require('material-ui/lib/lists/list');
 var ListDivider = require('material-ui/lib/lists/list-divider');
 var ListItem = require('material-ui/lib/lists/list-item');
@@ -21,7 +24,8 @@ var RebuildSearch = React.createClass({
   getInitialState: function(){
     return {
       items: [],
-      current_item: null
+      current_item: null,
+      search_word: null
     };
   },
 
@@ -37,6 +41,15 @@ var RebuildSearch = React.createClass({
     this.setState({current_item: this.state.items[index]});
   },
 
+  searchItems: function(){
+    var keyword = this.refs.searchForm.getValue();
+    if (keyword == ''){
+      this.setState({search_word: null});
+    }else{
+      this.setState({search_word: new RegExp(keyword,'i')});
+    }
+  },
+
   render: function() {
     return (
       <div className="container">
@@ -48,7 +61,10 @@ var RebuildSearch = React.createClass({
 
         <div className="wrapper">
           <div className="left">
-            <ItemList items={this.state.items} onClick={this.selectItem} />
+            <div className="search-form">
+              <TextField ref="searchForm" hintText="Keyword" onChange={this.searchItems} />
+            </div>
+            <ItemList items={this.state.items} keyword={this.state.search_word} onClick={this.selectItem} />
           </div>
           <div className="right">
             <ItemDetail item={this.state.current_item} />
@@ -63,7 +79,7 @@ var ItemList = React.createClass({
   render: function(){
     var that = this;
     var items = this.props.items.map(function(item,index){
-      return (<Item item={item} key={item.link} index={index} onClick={that.props.onClick} />);
+      return (<Item item={item} keyword={that.props.keyword} key={item.link} index={index} onClick={that.props.onClick} />);
     });
 
     return (
@@ -80,9 +96,14 @@ var Item = React.createClass({
   },
 
   render: function(){
+    var className = '';
+    if (this.props.keyword != null && !this.props.keyword.test(this.props.item.description)){
+      className = 'hide';
+    }
+
     var title = this.props.item.title.replace('&#40;','(').replace('&#41;',')');;
     return (
-      <ListItem primaryText={title} onClick={this._onClick}/>
+      <ListItem className={className} primaryText={title} onClick={this._onClick}/>
     );
   }
 });
