@@ -1,5 +1,6 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
+var moment = require('moment');
 
 var AppBar = require('material-ui/lib/app-bar');
 var IconButton = require('material-ui/lib/icon-button');
@@ -179,13 +180,14 @@ var ItemDetail = React.createClass({
     if (this.props.item){
       var title = this.unEscapeHTML(this.props.item.title);
       var desc = {__html: this.unEscapeHTML(this.props.item.description)};
+      var date = moment(this.props.item.pubDate).format("YYYY-MM-DD");
 
       return (
         <div className="item-detail">
           <Card>
             <CardTitle
               title={title}
-              subtitle={this.props.item.pubDate}
+              subtitle={date}
             />
             <CardText>
               <div><a href={this.props.item.link}>Rebuild.fm</a></div>
