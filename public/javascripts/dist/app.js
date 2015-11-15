@@ -26434,9 +26434,7 @@ var RebuildSearch = React.createClass({displayName: "RebuildSearch",
     return (
       React.createElement("div", {className: "container"}, 
         React.createElement("div", {className: "header"}, 
-          React.createElement(AppBar, {
-            title: "Rebuild Search", 
-            iconClassNameRight: "muidocs-icon-navigation-expand-more"})
+          React.createElement(AppBar, {title: "Rebuild Search"})
         ), 
 
         React.createElement("div", {className: "wrapper"}, 

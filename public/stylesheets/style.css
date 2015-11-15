@@ -41,6 +41,10 @@ body {
   right: 40px;
 }
 
+.item-detail a {
+  color: #000;
+}
+
 .search-form {
   padding-left: 10px;
 }

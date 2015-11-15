@@ -82,9 +82,7 @@ var RebuildSearch = React.createClass({
     return (
       <div className="container">
         <div className="header">
-          <AppBar
-            title="Rebuild Search"
-            iconClassNameRight="muidocs-icon-navigation-expand-more" />
+          <AppBar title="Rebuild Search" />
         </div>
 
         <div className="wrapper">
