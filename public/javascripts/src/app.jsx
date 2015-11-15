@@ -4,6 +4,7 @@ var ReactDOM = require('react-dom');
 var AppBar = require('material-ui/lib/app-bar');
 
 var TextField = require('material-ui/lib/text-field');
+var Badge = require('material-ui/lib/badge');
 
 var List = require('material-ui/lib/lists/list');
 var ListDivider = require('material-ui/lib/lists/list-divider');
@@ -25,7 +26,8 @@ var RebuildSearch = React.createClass({
     return {
       items: [],
       current_item: null,
-      search_word: null
+      showing_items_count: 0,
+      is_searching: false
     };
   },
 
@@ -33,7 +35,8 @@ var RebuildSearch = React.createClass({
     var global_items = Items;
     this.setState({
       items: global_items,
-      current_item: global_items[0]
+      current_item: global_items[0],
+      showing_items_count: global_items.length
     });
   },
 
@@ -41,13 +44,38 @@ var RebuildSearch = React.createClass({
     this.setState({current_item: this.state.items[index]});
   },
 
-  searchItems: function(){
-    var keyword = this.refs.searchForm.getValue();
+  searchItems: function(keyword){
+    var show_count = 0;
+    var is_searching = false;
+    var current_item = null;
     if (keyword == ''){
-      this.setState({search_word: null});
+      var updated_items = this.state.items.map(function(item){
+        item.is_visible = true;
+        show_count++;
+        if (current_item == null){ current_item = item; }
+        return item;
+      });
     }else{
-      this.setState({search_word: new RegExp(keyword,'i')});
+      var reg = new RegExp(keyword,'i');
+      var updated_items = this.state.items.map(function(item){
+        if (reg.test(item.description)){
+          item.is_visible = true;
+          show_count++;
+          if (current_item == null){ current_item = item; }
+        }else{
+          item.is_visible = false;
+        }
+        return item;
+      });
+      is_searching = true;
     }
+
+    this.setState({
+      items: updated_items,
+      showing_items_count: show_count,
+      is_searching: is_searching,
+      current_item: current_item
+    });
   },
 
   render: function() {
@@ -61,10 +89,8 @@ var RebuildSearch = React.createClass({
 
         <div className="wrapper">
           <div className="left">
-            <div className="search-form">
-              <TextField ref="searchForm" hintText="Keyword" onChange={this.searchItems} />
-            </div>
-            <ItemList items={this.state.items} keyword={this.state.search_word} onClick={this.selectItem} />
+            <SearchForm count={this.state.showing_items_count} is_searching={this.state.is_searching} onChange={this.searchItems}/>
+            <ItemList items={this.state.items} onClick={this.selectItem} />
           </div>
           <div className="right">
             <ItemDetail item={this.state.current_item} />
@@ -75,11 +101,34 @@ var RebuildSearch = React.createClass({
   }
 });
 
+var SearchForm = React.createClass({
+  _onChange: function(){
+    var keyword = this.refs.searchForm.getValue();
+    this.props.onChange(keyword);
+  },
+
+  render: function(){
+    var primary = false;
+    var secondary = true;
+    if (this.props.is_searching){
+      primary = true;
+      secondary = false;
+    }
+    return (
+      <div className="search-form">
+        <Badge badgeContent={this.props.count} primary={primary} secondary={secondary} badgeStyle={{top:36, right:-30, width:40}}>
+          <TextField ref="searchForm" hintText="Keyword" onChange={this._onChange} />
+        </Badge>
+      </div>
+    );
+  }
+});
+
 var ItemList = React.createClass({
   render: function(){
     var that = this;
     var items = this.props.items.map(function(item,index){
-      return (<Item item={item} keyword={that.props.keyword} key={item.link} index={index} onClick={that.props.onClick} />);
+      return (<Item item={item} key={item.link} index={index} onClick={that.props.onClick} />);
     });
 
     return (
@@ -97,7 +146,7 @@ var Item = React.createClass({
 
   render: function(){
     var className = '';
-    if (this.props.keyword != null && !this.props.keyword.test(this.props.item.description)){
+    if (this.props.item.is_visible != null && !this.props.item.is_visible){
       className = 'hide';
     }
 
