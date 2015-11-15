@@ -2,6 +2,8 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 
 var AppBar = require('material-ui/lib/app-bar');
+var IconButton = require('material-ui/lib/icon-button');
+var FlatButton = require('material-ui/lib/flat-button');
 
 var TextField = require('material-ui/lib/text-field');
 var Badge = require('material-ui/lib/badge');
@@ -78,11 +80,16 @@ var RebuildSearch = React.createClass({
     });
   },
 
+  clickGithubLink: function(){
+    this.refs.github_link.click();
+  },
+
   render: function() {
     return (
       <div className="container">
         <div className="header">
-          <AppBar title="Rebuild Search" />
+          <AppBar title="Rebuild Search" iconElementRight={<FlatButton label="Github" onClick={this.clickGithubLink} />} />
+          <a ref="github_link" target="_blank" href="https://github.com/volpe28v/RebuildSearch"></a>
         </div>
 
         <div className="wrapper">
