@@ -6,6 +6,8 @@ var AppBar = require('material-ui/lib/app-bar');
 var IconButton = require('material-ui/lib/icon-button');
 var FlatButton = require('material-ui/lib/flat-button');
 
+var Dialog = require('material-ui/lib/dialog');
+
 var TextField = require('material-ui/lib/text-field');
 var Badge = require('material-ui/lib/badge');
 
@@ -30,7 +32,8 @@ var RebuildSearch = React.createClass({
       items: [],
       current_item: null,
       showing_items_count: 0,
-      is_searching: false
+      is_searching: false,
+      is_open_dialog: false
     };
   },
 
@@ -44,7 +47,10 @@ var RebuildSearch = React.createClass({
   },
 
   selectItem: function(index){
-    this.setState({current_item: this.state.items[index]});
+    this.setState({
+      current_item: this.state.items[index],
+      is_open_dialog: true
+    });
   },
 
   searchItems: function(keyword){
@@ -85,25 +91,96 @@ var RebuildSearch = React.createClass({
     this.refs.github_link.click();
   },
 
+  handleRequestClose: function(){
+    this.setState({is_open_dialog: false});
+  },
+
   render: function() {
     return (
       <div className="container">
+        <DetailDialog item={this.state.current_item} isOpening={this.state.is_open_dialog} handleRequestClose={this.handleRequestClose} />
         <div className="header">
           <AppBar title="Rebuild Search" iconElementRight={<FlatButton label="Github" onClick={this.clickGithubLink} />} />
           <a ref="github_link" target="_blank" href="https://github.com/volpe28v/RebuildSearch"></a>
         </div>
-
-        <div className="wrapper">
-          <div className="left">
-            <SearchForm count={this.state.showing_items_count} is_searching={this.state.is_searching} onChange={this.searchItems}/>
-            <ItemList items={this.state.items} onClick={this.selectItem} />
-          </div>
-          <div className="right">
-            <ItemDetail item={this.state.current_item} />
-          </div>
+        <div className="contents">
+          <SearchForm count={this.state.showing_items_count} is_searching={this.state.is_searching} onChange={this.searchItems}/>
+          <ItemList items={this.state.items} onClick={this.selectItem} />
         </div>
       </div>
     );
+  }
+});
+
+var DetailDialog = React.createClass({
+  unEscapeHTML: function (str) {
+    return str
+            .replace(/(&lt;)/g, '<')
+            .replace(/(&gt;)/g, '>')
+            .replace(/(&quot;)/g, '"')
+            .replace(/(&#35;)/g, "#")
+            .replace(/(&#39;)/g, "'")
+            .replace(/(&#40;)/g, "(")
+            .replace(/(&#41;)/g, ")")
+            .replace(/(&amp;)/g, '&')
+  },
+
+  _handleRequestClose: function(){
+    this.props.handleRequestClose();
+  },
+
+  render: function(){
+    if (this.props.item){
+      var title = this.unEscapeHTML(this.props.item.title);
+      return (
+        <Dialog
+          title={title}
+          open={this.props.isOpening}
+          autoDetectWindowHeight={true}
+          autoScrollBodyContent={true}
+          onRequestClose={this._handleRequestClose}
+          modal={false}
+        >
+          <DetailText item={this.props.item}/>
+        </Dialog>
+      )
+    }else{
+      return (
+          <div></div>
+      )
+    }
+  }
+});
+
+var DetailText= React.createClass({
+  unEscapeHTML: function (str) {
+    return str
+            .replace(/(&lt;)/g, '<')
+            .replace(/(&gt;)/g, '>')
+            .replace(/(&quot;)/g, '"')
+            .replace(/(&#35;)/g, "#")
+            .replace(/(&#39;)/g, "'")
+            .replace(/(&#40;)/g, "(")
+            .replace(/(&#41;)/g, ")")
+            .replace(/(&amp;)/g, '&')
+  },
+
+  render: function(){
+    if (this.props.item){
+      var title = this.unEscapeHTML(this.props.item.title);
+      var desc = {__html: this.unEscapeHTML(this.props.item.description)};
+      var date = moment(this.props.item.pubDate).format("YYYY-MM-DD");
+
+      return (
+        <div>
+          <h3>{date}</h3>
+          <div><a href={this.props.item.link}>Rebuild.fm</a></div>
+          <div dangerouslySetInnerHTML={desc}></div>
+        </div>
+      );
+    }else{
+      return (<div></div>);
+    }
   }
 });
 

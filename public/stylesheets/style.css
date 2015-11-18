@@ -7,6 +7,8 @@ body {
   height: 100%; /* for IE11 */
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 .header{
@@ -27,11 +29,9 @@ body {
   padding: 0 20px;
 }
 
-.left {
-  flex: 1;
+.contents {
   margin-top: 80px;
-  margin-left: 10px;
-  margin-right: 20px;
+  min-width: 50%;
 }
 
 .right {
