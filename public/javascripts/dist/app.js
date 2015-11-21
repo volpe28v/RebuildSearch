@@ -30642,6 +30642,8 @@ var List = require('material-ui/lib/lists/list');
 var ListDivider = require('material-ui/lib/lists/list-divider');
 var ListItem = require('material-ui/lib/lists/list-item');
 
+var Paper = require('material-ui/lib/paper');
+
 var Card = require('material-ui/lib/card/card');
 var CardActions = require('material-ui/lib/card/card-actions');
 var CardExpandable = require('material-ui/lib/card/card-expandable');
@@ -30730,10 +30732,8 @@ var RebuildSearch = React.createClass({displayName: "RebuildSearch",
           React.createElement(AppBar, {title: "Rebuild Search", iconElementRight: React.createElement(FlatButton, {label: "Github", onClick: this.clickGithubLink})}), 
           React.createElement("a", {ref: "github_link", target: "_blank", href: "https://github.com/volpe28v/RebuildSearch"})
         ), 
-        React.createElement("div", {className: "contents"}, 
-          React.createElement(SearchForm, {count: this.state.showing_items_count, is_searching: this.state.is_searching, onChange: this.searchItems}), 
-          React.createElement(ItemList, {items: this.state.items, onClick: this.selectItem})
-        )
+        React.createElement(SearchForm, {count: this.state.showing_items_count, is_searching: this.state.is_searching, onChange: this.searchItems}), 
+        React.createElement(ItemList, {items: this.state.items, onClick: this.selectItem})
       )
     );
   }
@@ -30842,7 +30842,7 @@ var ItemList = React.createClass({displayName: "ItemList",
     });
 
     return (
-      React.createElement(List, null, 
+      React.createElement("div", {className: "contents"}, 
       items
       )
     );
@@ -30855,18 +30855,24 @@ var Item = React.createClass({displayName: "Item",
   },
 
   render: function(){
-    var className = '';
+    var className = 'item';
     if (this.props.item.is_visible != null && !this.props.item.is_visible){
-      className = 'hide';
+      className += ' hide';
     }
 
     var title = this.props.item.title.replace('&#40;','(').replace('&#41;',')');;
     return (
-      React.createElement(ListItem, {className: className, primaryText: title, onClick: this._onClick})
+      React.createElement(Paper, {
+        className: className, 
+        onClick: this._onClick, 
+        zDepth: 1}, 
+        React.createElement("p", null, title)
+      )
     );
   }
 });
 
+      //<ListItem className={className} primaryText={title} onClick={this._onClick}/>
 var ItemDetail = React.createClass({displayName: "ItemDetail",
   unEscapeHTML: function (str) {
     return str
@@ -30911,4 +30917,4 @@ ReactDOM.render(
   document.getElementById('content')
 );
 
-},{"material-ui/lib/app-bar":2,"material-ui/lib/badge":4,"material-ui/lib/card/card":12,"material-ui/lib/card/card-actions":6,"material-ui/lib/card/card-expandable":7,"material-ui/lib/card/card-header":8,"material-ui/lib/card/card-media":9,"material-ui/lib/card/card-text":10,"material-ui/lib/card/card-title":11,"material-ui/lib/dialog":13,"material-ui/lib/flat-button":16,"material-ui/lib/icon-button":18,"material-ui/lib/lists/list":21,"material-ui/lib/lists/list-divider":19,"material-ui/lib/lists/list-item":20,"material-ui/lib/text-field":47,"moment":79,"react":246,"react-dom":80,"react-tap-event-plugin":84}]},{},[247]);
+},{"material-ui/lib/app-bar":2,"material-ui/lib/badge":4,"material-ui/lib/card/card":12,"material-ui/lib/card/card-actions":6,"material-ui/lib/card/card-expandable":7,"material-ui/lib/card/card-header":8,"material-ui/lib/card/card-media":9,"material-ui/lib/card/card-text":10,"material-ui/lib/card/card-title":11,"material-ui/lib/dialog":13,"material-ui/lib/flat-button":16,"material-ui/lib/icon-button":18,"material-ui/lib/lists/list":21,"material-ui/lib/lists/list-divider":19,"material-ui/lib/lists/list-item":20,"material-ui/lib/paper":27,"material-ui/lib/text-field":47,"moment":79,"react":246,"react-dom":80,"react-tap-event-plugin":84}]},{},[247]);

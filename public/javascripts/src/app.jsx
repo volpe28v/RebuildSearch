@@ -15,6 +15,8 @@ var List = require('material-ui/lib/lists/list');
 var ListDivider = require('material-ui/lib/lists/list-divider');
 var ListItem = require('material-ui/lib/lists/list-item');
 
+var Paper = require('material-ui/lib/paper');
+
 var Card = require('material-ui/lib/card/card');
 var CardActions = require('material-ui/lib/card/card-actions');
 var CardExpandable = require('material-ui/lib/card/card-expandable');
@@ -103,10 +105,8 @@ var RebuildSearch = React.createClass({
           <AppBar title="Rebuild Search" iconElementRight={<FlatButton label="Github" onClick={this.clickGithubLink} />} />
           <a ref="github_link" target="_blank" href="https://github.com/volpe28v/RebuildSearch"></a>
         </div>
-        <div className="contents">
-          <SearchForm count={this.state.showing_items_count} is_searching={this.state.is_searching} onChange={this.searchItems}/>
-          <ItemList items={this.state.items} onClick={this.selectItem} />
-        </div>
+        <SearchForm count={this.state.showing_items_count} is_searching={this.state.is_searching} onChange={this.searchItems}/>
+        <ItemList items={this.state.items} onClick={this.selectItem} />
       </div>
     );
   }
@@ -215,9 +215,9 @@ var ItemList = React.createClass({
     });
 
     return (
-      <List>
+      <div className="contents">
       {items}
-      </List>
+      </div>
     );
   }
 });
@@ -228,18 +228,24 @@ var Item = React.createClass({
   },
 
   render: function(){
-    var className = '';
+    var className = 'item';
     if (this.props.item.is_visible != null && !this.props.item.is_visible){
-      className = 'hide';
+      className += ' hide';
     }
 
     var title = this.props.item.title.replace('&#40;','(').replace('&#41;',')');;
     return (
-      <ListItem className={className} primaryText={title} onClick={this._onClick}/>
+      <Paper
+        className={className}
+        onClick={this._onClick}
+        zDepth={1}>
+        <p>{title}</p>
+      </Paper>
     );
   }
 });
 
+      //<ListItem className={className} primaryText={title} onClick={this._onClick}/>
 var ItemDetail = React.createClass({
   unEscapeHTML: function (str) {
     return str
