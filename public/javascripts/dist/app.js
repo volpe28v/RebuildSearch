@@ -30799,7 +30799,7 @@ var DetailText= React.createClass({displayName: "DetailText",
       var date = moment(this.props.item.pubDate).format("YYYY-MM-DD");
 
       return (
-        React.createElement("div", null, 
+        React.createElement("div", {className: "item-detail"}, 
           React.createElement("h3", null, date), 
           React.createElement("div", null, React.createElement("a", {href: this.props.item.link}, "Rebuild.fm")), 
           React.createElement("div", {dangerouslySetInnerHTML: desc})
@@ -30861,12 +30861,13 @@ var Item = React.createClass({displayName: "Item",
     }
 
     var title = this.props.item.title.replace('&#40;','(').replace('&#41;',')');;
+    var date = moment(this.props.item.pubDate).format("YYYY-MM-DD");
     return (
       React.createElement(Paper, {
         className: className, 
         onClick: this._onClick, 
         zDepth: 1}, 
-        React.createElement("p", null, title)
+        React.createElement("p", null, title, " ", React.createElement("span", {className: "item-date"}, date))
       )
     );
   }

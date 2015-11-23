@@ -1,5 +1,7 @@
-body {
+*{
   margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 .container {
@@ -45,7 +47,7 @@ body {
 }
 
 .item {
-  padding: 0px 10px;
+  padding: 8px;
   margin: 5px;
   cursor: pointer;
 }
@@ -54,15 +56,19 @@ body {
   background-color: #ddd !important;
 }
 
+.item-date {
+  color: #999;
+}
+
 .item-detail {
-  position: fixed;
-  top: 90px;
-  left: 50%;
-  right: 40px;
 }
 
 .item-detail a {
-  color: #000;
+}
+
+.item-detail ul {
+  list-style-type: none;
+  margin-left: 10px;
 }
 
 .search-form {
@@ -74,3 +80,6 @@ body {
   display: none !important;
 }
 
+@media screen and (max-width: 768px){
+
+}

@@ -172,7 +172,7 @@ var DetailText= React.createClass({
       var date = moment(this.props.item.pubDate).format("YYYY-MM-DD");
 
       return (
-        <div>
+        <div className="item-detail">
           <h3>{date}</h3>
           <div><a href={this.props.item.link}>Rebuild.fm</a></div>
           <div dangerouslySetInnerHTML={desc}></div>
@@ -234,12 +234,13 @@ var Item = React.createClass({
     }
 
     var title = this.props.item.title.replace('&#40;','(').replace('&#41;',')');;
+    var date = moment(this.props.item.pubDate).format("YYYY-MM-DD");
     return (
       <Paper
         className={className}
         onClick={this._onClick}
         zDepth={1}>
-        <p>{title}</p>
+        <p>{title} <span className="item-date">{date}</span></p>
       </Paper>
     );
   }
