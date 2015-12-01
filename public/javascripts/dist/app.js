@@ -30800,8 +30800,7 @@ var DetailText= React.createClass({displayName: "DetailText",
 
       return (
         React.createElement("div", {className: "item-detail"}, 
-          React.createElement("h3", null, date), 
-          React.createElement("div", null, React.createElement("a", {href: this.props.item.link}, "Rebuild.fm")), 
+          React.createElement("div", {className: "goto-rebuild"}, React.createElement("a", {href: this.props.item.link}, "Go to Rebuild.fm")), 
           React.createElement("div", {dangerouslySetInnerHTML: desc})
         )
       );

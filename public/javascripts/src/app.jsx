@@ -173,8 +173,7 @@ var DetailText= React.createClass({
 
       return (
         <div className="item-detail">
-          <h3>{date}</h3>
-          <div><a href={this.props.item.link}>Rebuild.fm</a></div>
+          <div className="goto-rebuild"><a href={this.props.item.link}>Go to Rebuild.fm</a></div>
           <div dangerouslySetInnerHTML={desc}></div>
         </div>
       );
