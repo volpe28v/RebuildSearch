@@ -42,7 +42,7 @@ var RebuildSearch = React.createClass({
 
   componentDidMount: function(){
     var global_items = Items;
-    if (window.localStorage.keyword == ""){
+    if (window.localStorage.keyword == "" || window.localStorage.keyword == undefined){
       this.setState({
         items: global_items,
         keyword: window.localStorage.keyword,
@@ -69,6 +69,8 @@ var RebuildSearch = React.createClass({
     var show_count = 0;
     var is_searching = false;
     var current_item = null;
+
+    window.localStorage.keyword = keyword;
     if (keyword == ''){
       var updated_items = items.map(function(item){
         item.is_visible = true;
@@ -77,8 +79,6 @@ var RebuildSearch = React.createClass({
         return item;
       });
     }else{
-      window.localStorage.keyword = keyword;
-
       var reg = new RegExp(keyword,'i');
       var updated_items = items.map(function(item){
         if (reg.test(item.description)){
