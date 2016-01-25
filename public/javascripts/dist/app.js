@@ -30661,6 +30661,7 @@ var RebuildSearch = React.createClass({displayName: "RebuildSearch",
       items: [],
       current_item: null,
       showing_items_count: 0,
+      keyword: "",
       is_searching: false,
       is_open_dialog: false
     };
@@ -30668,11 +30669,16 @@ var RebuildSearch = React.createClass({displayName: "RebuildSearch",
 
   componentDidMount: function(){
     var global_items = Items;
-    this.setState({
-      items: global_items,
-      current_item: global_items[0],
-      showing_items_count: global_items.length
-    });
+    if (window.localStorage.keyword == ""){
+      this.setState({
+        items: global_items,
+        keyword: window.localStorage.keyword,
+        current_item: global_items[0],
+        showing_items_count: global_items.length
+      });
+    }else{
+      this._searchItemsFromItems(window.localStorage.keyword, global_items);
+    }
   },
 
   selectItem: function(index){
@@ -30683,19 +30689,25 @@ var RebuildSearch = React.createClass({displayName: "RebuildSearch",
   },
 
   searchItems: function(keyword){
+    this._searchItemsFromItems(keyword, this.state.items);
+  },
+
+  _searchItemsFromItems: function(keyword, items){
     var show_count = 0;
     var is_searching = false;
     var current_item = null;
     if (keyword == ''){
-      var updated_items = this.state.items.map(function(item){
+      var updated_items = items.map(function(item){
         item.is_visible = true;
         show_count++;
         if (current_item == null){ current_item = item; }
         return item;
       });
     }else{
+      window.localStorage.keyword = keyword;
+
       var reg = new RegExp(keyword,'i');
-      var updated_items = this.state.items.map(function(item){
+      var updated_items = items.map(function(item){
         if (reg.test(item.description)){
           item.is_visible = true;
           show_count++;
@@ -30711,6 +30723,7 @@ var RebuildSearch = React.createClass({displayName: "RebuildSearch",
     this.setState({
       items: updated_items,
       showing_items_count: show_count,
+      keyword: keyword,
       is_searching: is_searching,
       current_item: current_item
     });
@@ -30732,7 +30745,7 @@ var RebuildSearch = React.createClass({displayName: "RebuildSearch",
           React.createElement(AppBar, {title: "Rebuild Search", iconElementRight: React.createElement(FlatButton, {label: "Github", onClick: this.clickGithubLink})}), 
           React.createElement("a", {ref: "github_link", target: "_blank", href: "https://github.com/volpe28v/RebuildSearch"})
         ), 
-        React.createElement(SearchForm, {count: this.state.showing_items_count, is_searching: this.state.is_searching, onChange: this.searchItems}), 
+        React.createElement(SearchForm, {keyword: this.state.keyword, count: this.state.showing_items_count, is_searching: this.state.is_searching, onChange: this.searchItems}), 
         React.createElement(ItemList, {items: this.state.items, onClick: this.selectItem})
       )
     );
@@ -30826,7 +30839,7 @@ var SearchForm = React.createClass({displayName: "SearchForm",
     return (
       React.createElement("div", {className: "search-form"}, 
         React.createElement(Badge, {badgeContent: this.props.count, primary: primary, secondary: secondary, badgeStyle: {top:36, right:-30, width:40}}, 
-          React.createElement(TextField, {ref: "searchForm", hintText: "Keyword", onChange: this._onChange})
+          React.createElement(TextField, {ref: "searchForm", value: this.props.keyword, hintText: "Keyword", onChange: this._onChange})
         )
       )
     );
